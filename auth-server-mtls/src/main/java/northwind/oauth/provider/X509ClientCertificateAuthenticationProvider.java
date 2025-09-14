@@ -52,7 +52,8 @@ public final class X509ClientCertificateAuthenticationProvider implements Authen
 
 		X509Certificate x509Certificate = (X509Certificate) clientAuthentication.getCredentials();
 		String subjectDN = x509Certificate.getSubjectDN().getName();
-		if (!StringUtils.hasText(subjectDN) || !subjectDN.equals(registeredClient.getClientSettings().getSetting("SubjectDN"))) {
+		if (!StringUtils.hasText(subjectDN) ||
+				!subjectDN.equals(registeredClient.getClientSettings().getSetting("SubjectDN"))) {
 			throwInvalidClient();
 		}
 

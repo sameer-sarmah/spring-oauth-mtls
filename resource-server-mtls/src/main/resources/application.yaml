@@ -1,0 +1,38 @@
+server:
+  port: 8443
+  ssl:
+    enabled: true
+    key-store: classpath:mtls-server.p12
+    key-store-password: changeit
+    key-store-type: PKCS12
+    trust-store: classpath:mtls-truststore.p12
+    trust-store-password: changeit
+    trust-store-type: PKCS12
+    client-auth: need
+
+spring:
+  application:
+    name: resource-server-mtls
+  profiles:
+    active: default
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://localhost:8443
+
+logging:
+  config: classpath:logback.xml
+  level:
+    northwind: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always

@@ -3,17 +3,21 @@
   <groupId>northwind</groupId>
   <artifactId>spring-oauth-mtls</artifactId>
   <version>0.0.1-SNAPSHOT</version>
-  <packaging>pom</packaging>]  	
+  <packaging>pom</packaging>
   <parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.1</version>
+	    <version>3.5.5</version>
 		<relativePath /> <!-- lookup parent from repository -->
   </parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<java.version>1.8</java.version>
+		<java.version>21</java.version>
+		<commons-io.version>2.6</commons-io.version>
+		<commons-lang3.version>3.17.0</commons-lang3.version>
+		<commons-collections4.version>4.4</commons-collections4.version>
+		<commons-text.version>1.12.0</commons-text.version>
 	</properties>
   <modules>
   	<module>auth-server-mtls</module>

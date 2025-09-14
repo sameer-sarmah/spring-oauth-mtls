@@ -2,10 +2,12 @@ package northwind.oauth.converter;
 
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
@@ -18,6 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.MultiValueMap;
 import org.springframework.util.StringUtils;
 
+import northwind.util.CertificateUtil;
 import northwind.util.HttpUtil;
 
 @Component
@@ -28,9 +31,8 @@ public final class X509ClientCertificateAuthenticationConverter implements Authe
 	@Nullable
 	@Override
 	public Authentication convert(HttpServletRequest request) {
-		// Attempt to extract client certificate
-		X509Certificate clientCertificate = HttpUtil.extractClientCertificate(request);
-		if (clientCertificate == null) {
+		List<X509Certificate> clientCertificates = CertificateUtil.extractCertificates(request);
+		if (CollectionUtils.isEmpty(clientCertificates)) {
 			return null;
 		}
 
@@ -48,7 +50,7 @@ public final class X509ClientCertificateAuthenticationConverter implements Authe
 
 		Map<String, Object>  additionalParameters = new HashMap<>(parameters.toSingleValueMap());
 		additionalParameters.remove(OAuth2ParameterNames.CLIENT_ID);
-
+		X509Certificate clientCertificate = clientCertificates.get(0);
 		return new OAuth2ClientAuthenticationToken(
 				clientId, TLS_CLIENT_AUTH_AUTHENTICATION_METHOD,
 				clientCertificate, additionalParameters);

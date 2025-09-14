@@ -6,8 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +20,6 @@ import com.google.gson.reflect.TypeToken;
 import northwind.client.ApacheHttpClient;
 import northwind.exception.CoreException;
 import northwind.model.Product;
-import northwind.util.HttpMethod;
 
 
 @RestController

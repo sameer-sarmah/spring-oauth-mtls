@@ -3,7 +3,7 @@ package northwind.oauth.converter;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.lang.Nullable;
 import org.springframework.security.core.Authentication;
@@ -20,7 +20,6 @@ public final class ResourceValidatingAuthenticationConverter implements Authenti
 	private final AuthenticationConverter defaultAuthenticationConverter =
 			new DelegatingAuthenticationConverter(
 				Arrays.asList(
-					new X509ClientCredentialsAuthenticationConverter(),
 					new OAuth2ClientCredentialsAuthenticationConverter()
 				)
 			);

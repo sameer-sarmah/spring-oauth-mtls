@@ -2,7 +2,10 @@ package northwind.authentication;
 import java.security.MessageDigest;
 import java.security.cert.X509Certificate;
 import java.util.Base64;
+import java.util.List;
 
+import northwind.util.CertificateUtil;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.security.oauth2.core.OAuth2Error;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;
 import org.springframework.security.oauth2.core.OAuth2TokenValidator;
@@ -17,28 +20,21 @@ public final class X509ClientCertificateClaimValidator implements OAuth2TokenVal
 
 	@Override
 	public OAuth2TokenValidatorResult validate(Jwt jwt) {
-		X509Certificate x509Certificate = extractClientCertificate(RequestContextHolder.getRequestAttributes());
-		if (x509Certificate == null) {
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		List<X509Certificate> x509Certificates = CertificateUtil.extractCertificates(requestAttributes);
+		if (CollectionUtils.isEmpty(x509Certificates)) {
 			return OAuth2TokenValidatorResult.failure(INVALID_CLIENT_ERROR);
 		}
-
-		String sha256Thumbprint = computeThumbprint(x509Certificate);
-		if (sha256Thumbprint == null ||
-				!sha256Thumbprint.equals(jwt.getClaim("x5tc#S256"))) {
-			return OAuth2TokenValidatorResult.failure(INVALID_CLIENT_ERROR);
+		for(X509Certificate x509Certificate : x509Certificates){
+			String sha256Thumbprint = computeThumbprint(x509Certificate);
+			if (sha256Thumbprint == null ||
+					!sha256Thumbprint.equals(jwt.getClaim("x5tc#S256"))) {
+				return OAuth2TokenValidatorResult.failure(INVALID_CLIENT_ERROR);
+			}
 		}
-
 		return OAuth2TokenValidatorResult.success();
 	}
 
-	private static X509Certificate extractClientCertificate(RequestAttributes requestAttributes) {
-		X509Certificate[] certs = (X509Certificate[]) requestAttributes.getAttribute(
-				"javax.servlet.request.X509Certificate", RequestAttributes.SCOPE_REQUEST);
-		if (certs != null && certs.length > 0) {
-			return certs[0];
-		}
-		return null;
-	}
 
 	private static String computeThumbprint(X509Certificate x509Certificate) {
 		try {

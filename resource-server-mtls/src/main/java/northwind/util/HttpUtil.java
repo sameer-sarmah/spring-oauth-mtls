@@ -3,7 +3,7 @@ package northwind.util;
 import java.security.cert.X509Certificate;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -11,7 +11,7 @@ import org.springframework.util.MultiValueMap;
 public class HttpUtil {
 	
 	public static X509Certificate extractClientCertificate(HttpServletRequest request) {
-		X509Certificate[] certs = (X509Certificate[]) request.getAttribute("javax.servlet.request.X509Certificate");
+		X509Certificate[] certs = (X509Certificate[]) request.getAttribute("jakarta.servlet.request.X509Certificate");
 		if (certs != null && certs.length > 0) {
 			return certs[0];
 		}
