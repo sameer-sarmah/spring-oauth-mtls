@@ -1,14 +1,16 @@
 server:
-  port: 8443
+  port: 9443
   ssl:
     enabled: true
-    key-store: classpath:mtls-server.p12
-    key-store-password: changeit
+    key-alias: mtls-client
+    key-store: classpath:mtls-client.p12
+    key-password: password
+    key-store-password: password
     key-store-type: PKCS12
     trust-store: classpath:mtls-truststore.p12
-    trust-store-password: changeit
+    trust-store-password: password
     trust-store-type: PKCS12
-    client-auth: need
+#    client-auth: need
 
 spring:
   application:
@@ -20,6 +22,7 @@ spring:
       resourceserver:
         jwt:
           issuer-uri: https://localhost:8443
+          jwk-set-uri: https://localhost:8443/oauth2/jwks
 
 logging:
   config: classpath:logback.xml

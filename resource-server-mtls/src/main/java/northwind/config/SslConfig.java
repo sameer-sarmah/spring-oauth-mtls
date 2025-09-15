@@ -20,13 +20,13 @@ import northwind.util.KeyStoreUtil;
 @Configuration
 public class SslConfig {
 
-	@Value("${client.ssl.key-store}")
+	@Value("${server.ssl.key-store}")
 	private String keystoreFile;
-	@Value("${client.ssl.key-store-password}")
+	@Value("${server.ssl.key-store-password}")
 	private String keystorePwd;
-	@Value("${client.ssl.key-password}")
+	@Value("${server.ssl.key-password}")
 	private String keyPwd;
-	@Value("${client.ssl.key-store-type}")
+	@Value("${server.ssl.key-store-type}")
 	private String keyStoreType;
 	@Autowired
 	private KeyStoreUtil keyStoreUtil;
@@ -38,16 +38,15 @@ public class SslConfig {
 		try {
 			KeyStore keystore = keyStoreUtil.readStore();
 			SSLContext sslContext = SSLContexts.custom()
-												.loadKeyMaterial(keystore, keyPwd.toCharArray())
-												.loadTrustMaterial(keystore, new TrustSelfSignedStrategy())
-												.build();
+								.loadKeyMaterial(keystore, keyPwd.toCharArray())
+								.loadTrustMaterial(keystore, (chain, authType) -> true) // Accept all certificates, including expired
+								.build();
 			return sslContext;
 		}catch (IOException e) {
-				e.printStackTrace();
-				logger.error(e.getMessage());
-			} catch (Exception e) {
-				logger.error(e.getMessage());
-		}
+						logger.error(e.getMessage());
+					} catch (Exception e) {
+						logger.error(e.getMessage());
+			}
 		return null;
 	}
 	

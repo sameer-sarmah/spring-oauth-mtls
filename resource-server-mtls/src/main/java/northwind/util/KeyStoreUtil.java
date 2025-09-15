@@ -8,13 +8,13 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class KeyStoreUtil {
-	@Value("${client-key-store-file}")
+	@Value("${server.ssl.key-store}")
 	private String keystoreFile;
-	@Value("${client.ssl.key-store-password}")
+	@Value("${server.ssl.key-store-password}")
 	private String keystorePwd;
-	@Value("${client.ssl.key-password}")
+	@Value("${server.ssl.key-password}")
 	private String keyPwd;
-	@Value("${client.ssl.key-store-type}")
+	@Value("${server.ssl.key-store-type}")
 	private String keyStoreType;
 
 	public KeyStore readStore() throws Exception {
