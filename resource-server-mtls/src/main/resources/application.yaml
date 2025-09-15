@@ -11,7 +11,10 @@ server:
     trust-store-password: password
     trust-store-type: PKCS12
 #    client-auth: need
-
+key-store: mtls-client.p12
+key-password: password
+key-store-password: password
+key-store-type: PKCS12
 spring:
   application:
     name: resource-server-mtls

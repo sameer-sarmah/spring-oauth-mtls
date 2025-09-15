@@ -1,5 +1,8 @@
 package northwind.config;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +13,7 @@ import javax.net.ssl.SSLSession;
 
 
 import northwind.util.CertificateUtil;
+import org.apache.commons.io.IOUtils;
 import org.apache.hc.client5.http.classic.HttpClient;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.apache.hc.client5.http.impl.classic.HttpClientBuilder;
@@ -19,14 +23,15 @@ import org.apache.hc.client5.http.socket.ConnectionSocketFactory;
 import org.apache.hc.client5.http.socket.PlainConnectionSocketFactory;
 import org.apache.hc.client5.http.ssl.NoopHostnameVerifier;
 import org.apache.hc.client5.http.ssl.SSLConnectionSocketFactory;
-import org.apache.hc.core5.http.EntityDetails;
-import org.apache.hc.core5.http.HttpResponse;
-import org.apache.hc.core5.http.HttpResponseInterceptor;
+import org.apache.hc.core5.http.*;
 import org.apache.hc.core5.http.config.Registry;
 import org.apache.hc.core5.http.config.RegistryBuilder;
+import org.apache.hc.core5.http.io.HttpClientResponseHandler;
+import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 import org.apache.hc.core5.http.protocol.HttpContext;
 import org.apache.hc.core5.http.protocol.HttpCoreContext;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -64,6 +69,8 @@ public class ResourceServerConfig {
 
 	@Value("${spring.security.oauth2.resourceserver.jwt.jwk-set-uri}")
 	private String jwkSetUri;
+
+	private static final Logger logger = LoggerFactory.getLogger(ResourceServerConfig.class);
 
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -139,24 +146,45 @@ public class ResourceServerConfig {
 					X509Certificate[] certificates = (X509Certificate[]) sslSession.getPeerCertificates();
 					CertificateUtil.analyse(certificates);
 				} catch (Exception e) {
-					//logger.warn("Failed to analyze certificates from SSL session: " + e.getMessage());
+					logger.warn("Failed to analyze certificates from SSL session: " + e.getMessage());
 				}
 			} else {
-				//logger.info("No SSL session found in context");
+				logger.info("No SSL session found in context");
 			}
 		};
 
 		var connectionManager = new BasicHttpClientConnectionManager(socketFactoryRegistry);
-		CloseableHttpClient httpClient = HttpClientBuilder.create()
+//		CloseableHttpClient httpClient = HttpClientBuilder.create()
+//				.setConnectionManager(connectionManager)
+//				.addResponseInterceptorLast(certificateInterceptor)
+//				.build();
+		CloseableHttpClient httpClient = HttpClients.custom()
 				.setConnectionManager(connectionManager)
-				.addResponseInterceptorLast(certificateInterceptor)
+				//.setSSLSocketFactory(sslsf)
 				.build();
-		return  httpClient;
+		ClassicRequestBuilder requestBuilder = ClassicRequestBuilder.get(jwkSetUri);
+		ClassicHttpRequest request=requestBuilder.build();
+        try {
+            String response = getResponse(httpClient,request);
+			logger.info(response);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return  httpClient;
 
 	}
 
 	@Bean
 	public Supplier<ClientHttpRequestFactory> clientHttpRequestFactory(CloseableHttpClient httpClient) {
 		return () -> new HttpComponentsClientHttpRequestFactory(httpClient);
+	}
+
+	private String getResponse(HttpClient httpClient, ClassicHttpRequest request) throws IOException {
+		HttpClientResponseHandler<String> responseHandler = (ClassicHttpResponse response) -> {
+			InputStream inputStream = response.getEntity().getContent();
+			String responseStr = IOUtils.toString(inputStream, Charset.defaultCharset());
+			return responseStr;
+		};
+		return httpClient.execute(request,responseHandler);
 	}
 }

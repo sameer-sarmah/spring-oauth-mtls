@@ -1,0 +1,2 @@
+keytool -importcert -trustcacerts -alias mtls-server -file "C:\Users\I542324\Documents\GitHub\spring-oauth-mtls\auth-server-mtls\src\main\resources\mtls-server.crt" -keystore cacerts -storepass changeit
+keytool -exportcert -alias mtls-client -keystore mtls-client.p12 -storetype PKCS12 -file mtls-server.crt -storepass password
