@@ -1,0 +1,294 @@
+{
+    "info": {
+        "name": "My Project",
+        "description": "",
+        "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "item": [
+        {
+            "name": "northwind oauth mtls",
+            "description": "",
+            "item": [
+                {
+                    "name": "Get Token mtls",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "basic",
+                            "basic": [
+                                {
+                                    "key": "password",
+                                    "value": "secret",
+                                    "type": "string"
+                                },
+                                {
+                                    "key": "username",
+                                    "value": "messaging-client",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "POST",
+                        "body": {
+                            "mode": "urlencoded",
+                            "urlencoded": [
+                                {
+                                    "key": "grant_type",
+                                    "value": "client_credentials",
+                                    "type": "text",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "client_id",
+                                    "value": "mtls-client",
+                                    "type": "text",
+                                    "disabled": false
+                                },
+                                {
+                                    "key": "scope",
+                                    "value": "product.read product.write",
+                                    "type": "text",
+                                    "disabled": false
+                                }
+                            ]
+                        },
+                        "header": [],
+                        "url": {
+                            "raw": "https://localhost:8443/oauth2/token",
+                            "path": [
+                                "oauth2",
+                                "token"
+                            ],
+                            "host": [
+                                "localhost"
+                            ],
+                            "protocol": "https",
+                            "port": "8443",
+                            "query": [
+                                {
+                                    "key": "scope",
+                                    "value": "message:read",
+                                    "description": "",
+                                    "type": "string"
+                                }
+                            ],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "POST",
+                                "header": [],
+                                "url": {
+                                    "raw": "https://localhost:8443/oauth2/token",
+                                    "path": [
+                                        "oauth2",
+                                        "token"
+                                    ],
+                                    "host": [
+                                        "localhost"
+                                    ],
+                                    "protocol": "https",
+                                    "port": "8443",
+                                    "query": [
+                                        {
+                                            "key": "scope",
+                                            "value": "message:read",
+                                            "description": "",
+                                            "disabled": true
+                                        }
+                                    ],
+                                    "variable": []
+                                },
+                                "body": {
+                                    "mode": "urlencoded",
+                                    "urlencoded": [
+                                        {
+                                            "key": "grant_type",
+                                            "value": "client_credentials",
+                                            "type": "text",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "client_id",
+                                            "value": "messaging-client",
+                                            "type": "text",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "client_secret",
+                                            "value": "secret",
+                                            "type": "text",
+                                            "disabled": false
+                                        },
+                                        {
+                                            "key": "scope",
+                                            "value": "message.read message.write",
+                                            "type": "text",
+                                            "disabled": false
+                                        }
+                                    ]
+                                }
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "Resource Request",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {
+                            "type": "bearer",
+                            "bearer": [
+                                {
+                                    "key": "token",
+                                    "value": "eyJraWQiOiI0MDg1ZmFmZS0zYzMxLTRiZjQtYjM5NS03YzE2MDAyM2Q2OGMiLCJhbGciOiJSUzI1NiJ9.eyJzdWIiOiJtdGxzLWNsaWVudCIsImF1ZCI6Im10bHMtY2xpZW50Iiwic2NwIjoicHJvZHVjdC5yZWFkIG9wZW5pZCBwcm9kdWN0LndyaXRlIiwibmJmIjoxNzU3OTU4MzM2LCJzY29wZSI6WyJwcm9kdWN0LnJlYWQiLCJvcGVuaWQiLCJwcm9kdWN0LndyaXRlIl0sImlzcyI6Imh0dHBzOi8vbG9jYWxob3N0Ojg0NDMiLCJleHAiOjE3NTc5NjAxMzYsImlhdCI6MTc1Nzk1ODMzNiwianRpIjoiMjg4ZjNlYjktYzMwOS00MzliLTgxOGMtZjg4NzQ4MmZjZGNhIiwieDV0YyNTMjU2IjoiUlMxTWhwRzBKSWtGeGlmMGNDUVpMRV9yVERlUkhibE9qQ3FQT0llSUhWcyJ9.Vdf5xd0D70v95wLGTFfOzx69ZN0U-an-JB5aLTG7UbyhzWE05FpGXQiXvA4wm493At7dvWZgz8cU9zvbuwXwmYuMprjsjvBC5zvjqzA_Wib2Iu9p_jLHhtR-jiD-gQ8eysfMI7M9eGy5SbZVHsJnTMt0M3Dg28X7UuvthSup1lDIsEShaO8Guu-Cu6eOZGj0jXTS0uCDQuNPk9urUgDlfhrUwtKIZsRkH1R9lF7QhBl4ZIH9BMMCfJJYBKRU-fITxHrX7VGLWMqItk4pvLIxU8anOHzLztuK6siaC-YzFdhyH59gk9vbv9j4eSqcWBfecI52yTwNZ4lj_kqHoooZWA",
+                                    "type": "string"
+                                }
+                            ]
+                        },
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "https://localhost:9443/products",
+                            "path": [
+                                "products"
+                            ],
+                            "host": [
+                                "localhost"
+                            ],
+                            "protocol": "https",
+                            "port": "9443",
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [
+                        {
+                            "name": "Success",
+                            "originalRequest": {
+                                "method": "GET",
+                                "header": [],
+                                "url": {
+                                    "raw": "https://localhost:9443/products",
+                                    "path": [
+                                        "products"
+                                    ],
+                                    "host": [
+                                        "localhost"
+                                    ],
+                                    "protocol": "https",
+                                    "port": "9443",
+                                    "query": [],
+                                    "variable": []
+                                },
+                                "body": {}
+                            },
+                            "cookie": []
+                        }
+                    ],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "OICD",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "https://localhost:8443/.well-known/openid-configuration",
+                            "path": [
+                                ".well-known",
+                                "openid-configuration"
+                            ],
+                            "host": [
+                                "localhost"
+                            ],
+                            "protocol": "https",
+                            "port": "8443",
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                },
+                {
+                    "name": "JWKS",
+                    "description": "",
+                    "event": [],
+                    "auth": {},
+                    "request": {
+                        "auth": {},
+                        "method": "GET",
+                        "body": {},
+                        "header": [],
+                        "url": {
+                            "raw": "https://localhost:8443/oauth2/jwks",
+                            "path": [
+                                "oauth2",
+                                "jwks"
+                            ],
+                            "host": [
+                                "localhost"
+                            ],
+                            "protocol": "https",
+                            "port": "8443",
+                            "query": [],
+                            "variable": []
+                        }
+                    },
+                    "response": [],
+                    "protocolProfileBehavior": {
+                        "strictSSL": false,
+                        "followRedirects": true
+                    }
+                }
+            ],
+            "event": [
+                {
+                    "listen": "prerequest",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                },
+                {
+                    "listen": "test",
+                    "script": {
+                        "exec": [],
+                        "type": "text/javascript",
+                        "packages": {}
+                    }
+                }
+            ],
+            "auth": {}
+        }
+    ],
+    "variable": [],
+    "event": [],
+    "auth": {}
+}

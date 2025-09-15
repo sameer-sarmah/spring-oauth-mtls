@@ -10,7 +10,8 @@ server:
     trust-store: classpath:mtls-truststore.p12
     trust-store-password: password
     trust-store-type: PKCS12
-#    client-auth: need
+# If  client-auth is not set to "need", the server willnot request a client certificate and the client will not send one.
+    client-auth: need
 key-store: mtls-client.p12
 key-password: password
 key-store-password: password

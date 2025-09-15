@@ -20,6 +20,10 @@ public final class X509ClientCertificateClaimValidator implements OAuth2TokenVal
 
 	@Override
 	public OAuth2TokenValidatorResult validate(Jwt jwt) {
+		/*
+		* The client(Postman) invoke access token URL i.e. https://localhost:8443/oauth2/token with mtls-client.p12 keystore
+		* The client(Postman) must invoke the resource server HTTP APIs i.e. https://localhost:9443/products with mtls-client.p12 keystore
+		* */
 		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
 		List<X509Certificate> x509Certificates = CertificateUtil.extractCertificates(requestAttributes);
 		if (CollectionUtils.isEmpty(x509Certificates)) {
@@ -31,6 +35,7 @@ public final class X509ClientCertificateClaimValidator implements OAuth2TokenVal
 					!sha256Thumbprint.equals(jwt.getClaim("x5tc#S256"))) {
 				return OAuth2TokenValidatorResult.failure(INVALID_CLIENT_ERROR);
 			}
+			break;
 		}
 		return OAuth2TokenValidatorResult.success();
 	}

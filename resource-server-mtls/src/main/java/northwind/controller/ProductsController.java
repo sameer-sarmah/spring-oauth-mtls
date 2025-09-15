@@ -1,6 +1,7 @@
 package northwind.controller;
 
 import java.lang.reflect.Type;
+import java.security.cert.X509Certificate;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.Map;
 
 import jakarta.servlet.http.HttpServletRequest;
 
+import northwind.util.CertificateUtil;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
