@@ -1,0 +1,24 @@
+spring:
+  application:
+    name: oauth-client
+  profiles:
+    active: default
+
+logging:
+  config: classpath:logback.xml
+  level:
+    northwind: DEBUG
+    org.springframework.security: DEBUG
+    org.springframework.security.oauth2: DEBUG
+
+
+
+key-store-file: mtls-client.p12
+key-store-password: password
+key-store-type: PKCS12
+key-password: password
+trust-store-file: mtls-truststore.p12
+trust-store-password: password
+trust-store-type: PKCS12
+oauth-token-url: https://localhost:8443/oauth2/token
+oauth-client-id: mtls-client
