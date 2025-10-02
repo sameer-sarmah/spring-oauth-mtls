@@ -1,6 +1,5 @@
 package northwind.service;
 
-import java.io.InputStream;
 import java.util.Optional;
 
 import org.slf4j.Logger;
@@ -9,14 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
 import org.springframework.web.client.RestTemplate;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import northwind.model.Product;
 import northwind.util.Constants;
@@ -34,10 +34,7 @@ public class OAuthTokenService {
 	private String resourceUrl;
 	
 	@Autowired
-	private RestTemplate restTemplate;
-	
-	private static final ObjectMapper objectMapper = new ObjectMapper();
-	
+	private RestTemplate restTemplate;	
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OAuthTokenService.class);
 
@@ -76,12 +73,13 @@ public class OAuthTokenService {
 		return header;	
 	}
 	
-	public void invokeResourceUrl() {
+	public void invokeResourceUrl(Product product) {
 		try {
-			InputStream in = OAuthTokenService.class.getClassLoader()
-					.getSystemResourceAsStream("product.json");
-			Product product = objectMapper.readValue(in, Product.class);
-			HttpEntity<Product> httpEntity = createProductHttpEntity(product);
+			MultiValueMap<String, String> header = getAuthHeader();
+			HttpHeaders headers = new HttpHeaders();
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			headers.addAll(header);
+			HttpEntity<Product> httpEntity = new HttpEntity<>(product, headers);
 			ResponseEntity<String> response = restTemplate.postForEntity(resourceUrl, httpEntity, String.class);
 			LOGGER.info(response.getStatusCode().toString());
 		} catch (Exception e) {
@@ -89,12 +87,14 @@ public class OAuthTokenService {
 		}
 	}
 	
-	private HttpEntity<Product> createProductHttpEntity(Product product) {
-		MultiValueMap<String, String> header = getAuthHeader();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		headers.addAll(header);
-		return new HttpEntity<>(product, headers);
+	public void invokeResourceUrl(Product product,RequestCallback callback,ResponseExtractor responseExtractor) {
+		try {
+			HttpEntity<Product> httpEntity = new HttpEntity<>(product);
+			restTemplate.execute(resourceUrl, HttpMethod.POST, callback, responseExtractor);
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
 	}
+	
 	
 }

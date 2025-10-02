@@ -1,6 +1,6 @@
 package northwind.app;
 
-import java.util.Optional;
+import java.io.InputStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,9 +11,13 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Import;
+import org.springframework.web.client.RequestCallback;
+import org.springframework.web.client.ResponseExtractor;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import northwind.config.AppConfig;
-import northwind.service.OAuth2Response;
+import northwind.model.Product;
 import northwind.service.OAuthTokenService;
 
 
@@ -27,6 +31,12 @@ public class OAuthClientApplication  implements ApplicationRunner {
 	
 	@Autowired
 	private OAuthTokenService oAuthTokenService;
+	
+	@Autowired
+	private ResponseExtractor responseExtractor;
+	
+	@Autowired
+	private RequestCallback requestCallback;
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(OAuthClientApplication.class);
 	
@@ -42,7 +52,23 @@ public class OAuthClientApplication  implements ApplicationRunner {
 //		if(response.isPresent()) {
 //			LOGGER.info("Access Token: "+response.get().getAccess_token());
 //		}	
-		oAuthTokenService.invokeResourceUrl();
+		Product product = createProduct();
+	//	oAuthTokenService.invokeResourceUrl(product);
+		oAuthTokenService.invokeResourceUrl(product,requestCallback,responseExtractor);
+	}
+	
+	
+	private Product createProduct() {
+		try {
+			InputStream in = OAuthClientApplication.class.getClassLoader()
+					.getSystemResourceAsStream("product.json");
+			ObjectMapper objectMapper = new ObjectMapper();
+			Product product = objectMapper.readValue(in, Product.class);
+			return product;
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage(), e);
+		}
+		return null;
 	}
 
 }
