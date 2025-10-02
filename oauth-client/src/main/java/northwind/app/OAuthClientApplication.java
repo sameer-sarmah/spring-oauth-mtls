@@ -38,10 +38,11 @@ public class OAuthClientApplication  implements ApplicationRunner {
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
-		Optional<OAuth2Response> response= oAuthTokenService.generateOAuthToken();
-		if(response.isPresent()) {
-			LOGGER.info("Access Token: "+response.get().getAccess_token());
-		}		
+//		Optional<OAuth2Response> response= oAuthTokenService.generateOAuthToken();
+//		if(response.isPresent()) {
+//			LOGGER.info("Access Token: "+response.get().getAccess_token());
+//		}	
+		oAuthTokenService.invokeResourceUrl();
 	}
 
 }

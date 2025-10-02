@@ -22,3 +22,4 @@ trust-store-password: password
 trust-store-type: PKCS12
 oauth-token-url: https://localhost:8443/oauth2/token
 oauth-client-id: mtls-client
+resource-url: https://localhost:9443/products
